@@ -84,7 +84,7 @@ export default function SignupPage() {
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white px-10">
           <h2 className="text-3xl font-bold mb-2">JobBoard</h2>
           <h1 className="text-4xl font-bold mb-4">Join With Us</h1>
-          <p className="max-w-md text-center">
+          <p className="max-w-md text-center ml-30">
             Create your account and explore opportunities tailored for you.
           </p>
         </div>

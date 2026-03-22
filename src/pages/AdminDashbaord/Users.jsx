@@ -25,33 +25,34 @@ export default function Users() {
 
   }, []);
 
-//   const handleStatusChange = (jobId, status) => {
-//     const token = localStorage.getItem("adminUser");
+  //   const handleStatusChange = (jobId, status) => {
+  //     const token = localStorage.getItem("adminUser");
 
-//     axios
-//       .patch(
-//         `${import.meta.env.VITE_BASE_URL}/api/jobs/status/${jobId}`,
-//         { status },
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       )
-//       .then((res) => {
-//         // Update local state
-//         setJobs((prevJobs) =>
-//           prevJobs.map((job) =>
-//             job.id === jobId ? { ...job, status } : job
-//           )
-//         );
-//       })
-//       .catch((err) => {
-//         console.error("Failed to update status:", err);
-//       });
-//   };
+  //     axios
+  //       .patch(
+  //         `${import.meta.env.VITE_BASE_URL}/api/jobs/status/${jobId}`,
+  //         { status },
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       )
+  //       .then((res) => {
+  //         // Update local state
+  //         setJobs((prevJobs) =>
+  //           prevJobs.map((job) =>
+  //             job.id === jobId ? { ...job, status } : job
+  //           )
+  //         );
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to update status:", err);
+  //       });
+  //   };
 
   /* SEARCH */
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers = users.filter((user) => {
+    const name = user?.name || "";
+    return name.toLowerCase().includes(search.toLowerCase());
+  });
 
   /* PAGINATION */
 
@@ -87,17 +88,17 @@ export default function Users() {
       {/* SEARCH */}
 
       <div className="relative mb-6 w-full md:w-80">
-  {/* Search Icon */}
-  <Search
-    size={20}
-    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-  />
+        {/* Search Icon */}
+        <Search
+          size={20}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        />
 
-  {/* Input Field */}
-  <input
-    type="text"
-    placeholder="Search users..."
-    className="
+        {/* Input Field */}
+        <input
+          type="text"
+          placeholder="Search users..."
+          className="
         text-black
       pl-10 pr-4 py-2 w-full
       border border-gray-300
@@ -106,10 +107,10 @@ export default function Users() {
       transition
       placeholder-gray-400
     "
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-  />
-</div>
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
 
       {/* TABLE */}
@@ -145,18 +146,18 @@ export default function Users() {
                 </td>
 
                 <td className="px-6 py-4 font-medium text-gray-900">
-                  {user.name}
+                  {user?.name || user?.companyName}
                 </td>
 
                 <td className="px-6 py-4 text-gray-600">
-                  {user.email}
+                  {user?.email}
                 </td>
 
                 <td className="px-6 py-4 text-gray-600">
-                  {user.role}
+                  {user?.role}
                 </td>
                 <td className="px-6 py-4 text-gray-600">
-                  {new Date(user.createdAt).toLocaleDateString() }
+                  {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4">
                   <select

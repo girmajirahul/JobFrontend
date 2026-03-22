@@ -5,7 +5,8 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import Navbar from './components/Navbar'
 import JobBoard from './components/Navbar'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from "react-router-dom"; // ✅ FIX
+import ProtectedRoute from "./components/ProtectedRoutes";
 import LoginPage from './components/Login'
 import SignupPage from './components/Signup'
 import DashboardLayout from './pages/CandidateDashbaord/DashboardLayout'
@@ -26,7 +27,7 @@ import Jobs from './pages/AdminDashbaord/Jobs'
 import Reports from './pages/AdminDashbaord/Reports'
 
 function App() {
-  
+
   return (
     <>
       <ToastContainer />
@@ -38,28 +39,47 @@ function App() {
 
           {/* Admin Routes */}
 
-          <Route path="/dashboard/admin" element={<AdminLayout />}>
+          <Route
+            path="/dashboard/admin"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<AdminHome />} />
             <Route path="users" element={<Users />} />
-             <Route path="jobs" element={<Jobs />} />
-            <Route path="reports" element={<Reports />} /> 
+            <Route path="jobs" element={<Jobs />} />
+            <Route path="reports" element={<Reports />} />
           </Route>
 
           {/* Candidate  Routes */}
-          <Route path="/dashboard/student" element={<DashboardLayout />}>
+          <Route
+            path="/dashboard/student"
+            element={
+              <ProtectedRoute allowedRoles={["jobseeker"]}>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Home />} />
-            <Route path='profile' element={<Profile />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="resume" element={<Resume />} />
             <Route path="applied-jobs" element={<AppliedJobs />} />
           </Route>
 
           {/* Employer Routes */}
-          <Route path="/dashboard/employer" element={<EmployerLayout />}>
+          <Route
+            path="/dashboard/employer"
+            element={
+              <ProtectedRoute allowedRoles={["employer"]}>
+                <EmployerLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<EmployerHome />} />
             <Route path="profile" element={<CompanyProfile />} />
             <Route path="post-job" element={<PostJob />} />
-            {/* <Route path="manage-jobs" element={<ManageJobs />} /> */}
-            {/* <Route path="applications" element={<Applications />} /> */}
           </Route>
 
         </Routes>
