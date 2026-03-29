@@ -1,26 +1,53 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     jobTitle: "",
-    experience: "",
-    education: "",
+    github: "",
+    linkedin: "",
     website: "",
     email: "",
     phone: "",
     location: "",
     bio: "",
   });
+  const [loading,setLoading]=useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const resp = await axios.put(
+        `${import.meta.env.VITE_BASE_URL}/api/users/profile`,
+        formData, // ✅ send actual data here
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (resp?.data?.message) {
+        toast.success(resp.data.message || "Profile updated Successfully!");
+      }
+      setFormData(null)
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong');
+    }finally{
+      setLoading(false)
+    }
+
+    
   };
 
   return (
@@ -43,7 +70,7 @@ export default function Profile() {
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
+
             <input
               type="text"
               name="firstName"
@@ -70,16 +97,16 @@ export default function Profile() {
 
             <input
               type="text"
-              name="experience"
-              placeholder="Experience (e.g. 2 Years)"
+              name="github"
+              placeholder="GitHub link"
               className="input"
               onChange={handleChange}
             />
 
             <input
               type="text"
-              name="education"
-              placeholder="Education"
+              name="linkedin"
+              placeholder="LinkedIn"
               className="input"
               onChange={handleChange}
             />
@@ -101,7 +128,7 @@ export default function Profile() {
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
+
             <input
               type="email"
               name="email"
@@ -148,6 +175,7 @@ export default function Profile() {
           <button
             type="submit"
             className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition"
+            disabled={loading}
           >
             Save Changes
           </button>

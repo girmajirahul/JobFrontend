@@ -7,12 +7,20 @@ import LatestJobs from "./HeroSection/LatestJobs";
 import Testimonials from "./HeroSection/Testimonials";
 import Footer from "./Footer";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
+import AIAssistant from "./AIAssistant";
 
 // Navbar Component with Mobile Sidebar
 const Navbar = () => {
+    const { user, logout } = useAuth()
     const [isOpen, setIsOpen] = useState(false);
-    const navigate=useNavigate();
-    return(
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+    return (
         <>
             <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -30,8 +38,43 @@ const Navbar = () => {
 
                     {/* Desktop Buttons */}
                     <div className="hidden md:flex space-x-3">
-                        <button className="px-4 py-2 border border-purple-500 text-purple-600 rounded-lg  cursor-pointer" onClick={()=>navigate('/signup')}>Sign Up</button>
-                        <button className="px-4 py-2 bg-purple-600 text-white rounded-lg  cursor-pointer" onClick={()=>navigate('/login')}>Login</button>
+                        {!user ? (
+                            <>
+                                <button
+                                    className="px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
+                                    onClick={() => navigate("/signup")}
+                                >
+                                    Sign Up
+                                </button>
+
+                                <button
+                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
+                                    onClick={() => navigate("/login")}
+                                >
+                                    Login
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    className="px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
+                                    onClick={() => {
+                                        if (user.role === "jobseeker") navigate("/dashboard/student");
+                                        else if (user.role === "employer") navigate("/dashboard/employer");
+                                        else if (user.role === "admin") navigate("/dashboard/admin");
+                                    }}
+                                >
+                                    Dashboard
+                                </button>
+
+                                <button
+                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile Hamburger */}
@@ -68,12 +111,53 @@ const Navbar = () => {
                 </div>
 
                 <div className="p-4 border-t space-y-3">
-                    <button className="w-full px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer" onClick={()=>navigate('/signup')}>
-                        Sign Up
-                    </button>
-                    <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg  cursor-pointer" onClick={()=>navigate('/login')}>
-                        Login
-                    </button>
+                    {!user ? (
+                        <>
+                            <button
+                                className="w-full px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
+                                onClick={() => {
+                                    navigate("/signup");
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Sign Up
+                            </button>
+
+                            <button
+                                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
+                                onClick={() => {
+                                    navigate("/login");
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Login
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                className="w-full px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
+                                onClick={() => {
+                                    if (user.role === "jobseeker") navigate("/dashboard/student");
+                                    else if (user.role === "employer") navigate("/dashboard/employer");
+                                    else if (user.role === "admin") navigate("/dashboard/admin");
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Dashboard
+                            </button>
+
+                            <button
+                                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
+                                onClick={() => {
+                                    handleLogout();
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Logout
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </>
@@ -92,6 +176,7 @@ const JobBoard = () => {
             <JobCategories />
             <LatestJobs />
             <Testimonials />
+            <AIAssistant />
             <Footer />
         </div>
     );

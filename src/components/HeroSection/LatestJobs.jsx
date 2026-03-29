@@ -1,40 +1,23 @@
-import React from "react";
-import { FaGoogle, FaAmazon, FaMicrosoft } from "react-icons/fa";
-// import { SiMicrosoft } from "react-icons/si";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { FaBriefcase } from "react-icons/fa";
 
 export default function LatestJobs() {
-  const jobs = [
-    {
-      company: "Google",
-      location: "New York",
-      role: "Sr. Product Designer",
-      desc: "It is a long established fact that a reader of a page when looking at its layout.",
-      salary: "$560",
-      time: "2 Day ago",
-      type: "Full Time",
-      icon: FaGoogle,
-    },
-    {
-      company: "Microsoft",
-      location: "California",
-      role: "Web Designer",
-      desc: "It is a long established fact that a reader of a page when looking at its layout.",
-      salary: "$560",
-      time: "1 Day ago",
-      type: "Full Time",
-      icon: FaMicrosoft,
-    },
-    {
-      company: "Amazon",
-      location: "Southfield",
-      role: "IT Management",
-      desc: "It is a long established fact that a reader of a page when looking at its layout.",
-      salary: "$560",
-      time: "2 Day ago",
-      type: "Full Time",
-      icon: FaAmazon,
-    },
-  ];
+
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_BASE_URL}/api/jobs`) // ✅ your API
+      .then((res) => {
+        setJobs(res.data.jobs); // ✅ important
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <section className="p-5 bg-gray-50">
@@ -57,15 +40,19 @@ export default function LatestJobs() {
           </button>
         </div>
 
+        {/* Loading */}
+        {loading && (
+          <p className="text-center text-gray-500">Loading jobs...</p>
+        )}
+
         {/* Job Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {jobs.map((job, index) => {
-            const Icon = job.icon;
-
-            return (
+          {jobs
+            ?.filter((job) => job.status === "active") // ✅ show only active
+            .map((job) => (
               <div
-                key={index}
+                key={job._id}
                 className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group"
               >
 
@@ -75,29 +62,45 @@ export default function LatestJobs() {
                   {/* Company */}
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-lg text-xl">
-                      <Icon />
+                      <FaBriefcase /> {/* default icon */}
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800">
-                        {job.company}, {job.location}
+                        {job.company?.name}, {job.location}
                       </h4>
-                      <p className="text-sm text-gray-500">{job.role}</p>
+                      <p className="text-sm text-gray-500">
+                        {job.title}
+                      </p>
                     </div>
                   </div>
 
                   {/* Tags */}
                   <div className="text-right">
-                    <p className="text-xs text-gray-400">{job.time}</p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(job.createdAt).toLocaleDateString()}
+                    </p>
                     <span className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-md">
-                      {job.type}
+                      Full Time
                     </span>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-500 text-sm mb-6">
-                  {job.desc}
+                <p className="text-gray-500 text-sm mb-4">
+                  {job.description}
                 </p>
+
+                {/* Skills */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {job.skills?.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
 
                 {/* Bottom Row */}
                 <div className="flex justify-between items-center">
@@ -106,14 +109,15 @@ export default function LatestJobs() {
                   </button>
 
                   <p className="text-purple-600 font-semibold">
-                    {job.salary} <span className="text-gray-500 text-sm">/ Hour</span>
+                    ₹{job.salary}
                   </p>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </div>
+
+      {/* View All */}
       <div className="mt-12 flex justify-center">
         <button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg transition cursor-pointer">
           View All Jobs

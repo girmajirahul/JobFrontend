@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FaUser, FaFileAlt, FaBriefcase, FaBars, FaHome, FaTimes } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const {user}=useAuth()
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -45,8 +46,8 @@ export default function DashboardLayout() {
               alt=""
             />
           </div>
-          <h3 className="mt-4 font-semibold text-gray-800">Rahul Girmaji</h3>
-          <p className="text-sm text-gray-500">Student</p>
+          <h3 className="mt-4 font-semibold text-gray-800">{user?.name || "User"}</h3>
+          <p className="text-sm text-gray-500">{user?.role || "Student"}</p>
         </div>
 
         {/* Menu */}
@@ -89,12 +90,7 @@ export default function DashboardLayout() {
           {/* Right */}
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2">
-              <img
-                src="/images/user.png"
-                alt=""
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="text-sm text-gray-700">Rahul</span>
+              <span className="cursor-pointer" onClick={()=>navigate('/')}><FaHome  size={18}/></span>
             </div>
 
             <button

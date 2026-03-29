@@ -1,17 +1,17 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-export default function ProtectedRoute({ children, allowedRoles }) {
- const {user}=useAuth()
-  // ❌ Not logged in
-  if (!user) {
+
+export default function ProtectedRoute({ children, role }) {
+  const { user, loading } = useAuth();
+
+  // 🔥 WAIT until auth is loaded
+  if (loading) return <div>Loading...</div>;
+
+  if (!user) return <Navigate to="/login" />;
+
+  if (role && user.role !== role) {
     return <Navigate to="/login" />;
   }
 
-  // ❌ Role not allowed
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
-  }
-
-  // ✅ Allowed
   return children;
 }

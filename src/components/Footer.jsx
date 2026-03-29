@@ -129,7 +129,7 @@ export default function Footer() {
             </div>
 
             {/* Floating Icons */}
-            <div className="fixed bottom-18 right-6 flex flex-col gap-3">
+            <div className="fixed bottom-25 right-6 flex flex-col gap-3">
                 <a
                     href="https://wa.me/9021710342"
                     target="_blank"

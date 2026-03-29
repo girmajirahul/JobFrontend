@@ -28,7 +28,7 @@ const Hero = () => {
                         <input
                             type="text"
                             placeholder="Job Title, Keywords"
-                            className="flex-1 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="flex-1 border rounded-lg px-4 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                         />
                         <input
                             type="text"

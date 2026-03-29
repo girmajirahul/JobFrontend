@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true); // 🔥 IMPORTANT
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -19,14 +19,14 @@ export function AuthProvider({ children }) {
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
-      setIsLoggedIn(true);
     }
+
+    setLoading(false); // ✅ after checking
   }, []);
 
   const login = (userData, tokenValue) => {
     setUser(userData);
     setToken(tokenValue);
-    setIsLoggedIn(true);
 
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", tokenValue);
@@ -35,24 +35,14 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-    setIsLoggedIn(false);
 
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    
   };
-
-   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isLoggedIn, login, logout }}
+      value={{ user, token, loading, login, logout }}
     >
       {children}
     </AuthContext.Provider>
