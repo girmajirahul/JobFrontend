@@ -1,187 +1,181 @@
-import React, { useState } from "react";
-import Hero from "./HeroSection/Herosection";
-import HowItWorks from "./HeroSection/HowItWorks";
-import TalentSection from "./HeroSection/TalentSection";
-import JobCategories from "./HeroSection/Jobcategories";
-import LatestJobs from "./HeroSection/LatestJobs";
-import Testimonials from "./HeroSection/Testimonials";
-import Footer from "./Footer";
-import { useNavigate } from "react-router";
+import { useCallback, useMemo, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import AIAssistant from "./AIAssistant";
 
-// Navbar Component with Mobile Sidebar
+
+const MENU_ITEMS = [
+  {
+    name: "Home",
+    path: "/",
+  },
+  {
+    name: "For Candidates",
+    path: "/candidates",
+  },
+  {
+    name: "For Employers",
+    path: "/employers",
+  },
+];
+
+const ROLE_DASHBOARD = {
+  jobseeker: "/dashboard/student",
+  employer: "/dashboard/employer",
+  admin: "/dashboard/admin",
+};
+
 const Navbar = () => {
-    const { user, logout } = useAuth()
-    const [isOpen, setIsOpen] = useState(false);
-    const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
-    };
-    return (
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const dashboardPath = useMemo(
+    () => ROLE_DASHBOARD[user?.role],
+    [user]
+  );
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleNavigate = useCallback(
+    (path) => {
+      navigate(path);
+      closeSidebar();
+    },
+    [navigate, closeSidebar]
+  );
+
+  const handleLogout = useCallback(() => {
+    logout();
+    navigate("/login");
+  }, [logout, navigate]);
+
+  const NavigationLinks = () => (
+    <>
+      {MENU_ITEMS.map((item) => (
+        <NavLink
+          key={item.name}
+          to={item.path}
+          className={({ isActive }) =>
+            `hover:text-purple-600 transition ${
+              isActive ? "text-purple-600" : ""
+            }`
+          }
+          onClick={closeSidebar}
+        >
+          {item.name}
+        </NavLink>
+      ))}
+    </>
+  );
+
+  const AuthButtons = () => {
+    if (!user) {
+      return (
         <>
-            <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                    {/* Logo */}
-                    <div className="text-2xl font-bold text-purple-600">
-                        <img src="/images/logo.png" alt="logo" className="w-40"/>
-                    </div>
+          <button
+            onClick={() => handleNavigate("/signup")}
+            className="px-4 py-2 rounded-lg border border-purple-600 text-purple-600 hover:bg-purple-50"
+          >
+            Sign Up
+          </button>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-6 text-gray-700 font-medium">
-                        <a href="#" className="hover:text-purple-600">Home</a>
-                        <a href="#" className="hover:text-purple-600">For Candidates</a>
-                        <a href="#" className="hover:text-purple-600">For Employers</a>
-                        {/* <a href="#" className="hover:text-purple-600">Pages</a>
-                        <a href="#" className="hover:text-purple-600">Blog</a> */}
-                    </div>
-
-                    {/* Desktop Buttons */}
-                    <div className="hidden md:flex space-x-3">
-                        {!user ? (
-                            <>
-                                <button
-                                    className="px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
-                                    onClick={() => navigate("/signup")}
-                                >
-                                    Sign Up
-                                </button>
-
-                                <button
-                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
-                                    onClick={() => navigate("/login")}
-                                >
-                                    Login
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <button
-                                    className="px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
-                                    onClick={() => {
-                                        if (user.role === "jobseeker") navigate("/dashboard/student");
-                                        else if (user.role === "employer") navigate("/dashboard/employer");
-                                        else if (user.role === "admin") navigate("/dashboard/admin");
-                                    }}
-                                >
-                                    Dashboard
-                                </button>
-
-                                <button
-                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </button>
-                            </>
-                        )}
-                    </div>
-
-                    {/* Mobile Hamburger */}
-                    <div className="md:hidden">
-                        <button onClick={() => setIsOpen(true)} className="text-2xl">☰</button>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Sidebar Overlay */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-40 z-40"
-                    onClick={() => setIsOpen(false)}
-                ></div>
-            )}
-
-            {/* Sidebar */}
-            <div
-                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
-                    }`}
-            >
-                <div className="p-4 flex justify-between items-center border-b">
-                    <h2 className="text-xl font-bold text-purple-600">Menu</h2>
-                    <button onClick={() => setIsOpen(false)} className="text-xl">✕</button>
-                </div>
-
-                <div className="flex flex-col p-4 space-y-4 text-gray-700 font-medium">
-                    <a href="#" onClick={() => setIsOpen(false)}>Home</a>
-                    <a href="#" onClick={() => setIsOpen(false)}>For Candidates</a>
-                    <a href="#" onClick={() => setIsOpen(false)}>For Employers</a>
-                    {/* <a href="#" onClick={() => setIsOpen(false)}>Pages</a>
-                    <a href="#" onClick={() => setIsOpen(false)}>Blog</a> */}
-                </div>
-
-                <div className="p-4 border-t space-y-3">
-                    {!user ? (
-                        <>
-                            <button
-                                className="w-full px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
-                                onClick={() => {
-                                    navigate("/signup");
-                                    setIsOpen(false);
-                                }}
-                            >
-                                Sign Up
-                            </button>
-
-                            <button
-                                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
-                                onClick={() => {
-                                    navigate("/login");
-                                    setIsOpen(false);
-                                }}
-                            >
-                                Login
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <button
-                                className="w-full px-4 py-2 border border-purple-500 text-purple-600 rounded-lg cursor-pointer"
-                                onClick={() => {
-                                    if (user.role === "jobseeker") navigate("/dashboard/student");
-                                    else if (user.role === "employer") navigate("/dashboard/employer");
-                                    else if (user.role === "admin") navigate("/dashboard/admin");
-                                    setIsOpen(false);
-                                }}
-                            >
-                                Dashboard
-                            </button>
-
-                            <button
-                                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg cursor-pointer"
-                                onClick={() => {
-                                    handleLogout();
-                                    setIsOpen(false);
-                                }}
-                            >
-                                Logout
-                            </button>
-                        </>
-                    )}
-                </div>
-            </div>
+          <button
+            onClick={() => handleNavigate("/login")}
+            className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+          >
+            Login
+          </button>
         </>
-    );
-};
+      );
+    }
 
-
-// Main Page
-const JobBoard = () => {
     return (
-        <div>
-            <Navbar />
-            <Hero />
-            <HowItWorks />
-            <TalentSection />
-            <JobCategories />
-            <LatestJobs />
-            <Testimonials />
-            <AIAssistant />
-            <Footer />
-        </div>
+      <>
+        <button
+          onClick={() => handleNavigate(dashboardPath)}
+          className="px-4 py-2 rounded-lg border border-purple-600 text-purple-600 hover:bg-purple-50"
+        >
+          Dashboard
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+        >
+          Logout
+        </button>
+      </>
     );
+  };
+
+  return (
+    <>
+      <nav className="fixed top-0 left-0 z-50 w-full bg-white shadow">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <Link to="/">
+            <img
+              src="/images/logo.png"
+              alt="Job Portal"
+              className="w-40"
+            />
+          </Link>
+
+          <div className="hidden items-center gap-8 md:flex">
+            <NavigationLinks />
+          </div>
+
+          <div className="hidden gap-3 md:flex">
+            <AuthButtons />
+          </div>
+
+          <button
+            aria-label="Open Menu"
+            onClick={() => setSidebarOpen(true)}
+            className="text-2xl md:hidden"
+          >
+            ☰
+          </button>
+        </div>
+      </nav>
+
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40"
+          onClick={closeSidebar}
+        />
+      )}
+
+      <aside
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b p-4">
+          <h2 className="text-xl font-bold text-purple-600">
+            Menu
+          </h2>
+
+          <button
+            aria-label="Close Menu"
+            onClick={closeSidebar}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-5 p-4">
+          <NavigationLinks />
+        </div>
+
+        <div className="space-y-3 border-t p-4">
+          <AuthButtons />
+        </div>
+      </aside>
+    </>
+  );
 };
 
-export default JobBoard;
+export default Navbar
