@@ -26,7 +26,7 @@ export default function Jobs() {
   }, []);
 
   const handleStatusChange = (jobId, status) => {
-    const token = localStorage.getItem("adminUser");
+    const token = localStorage.getItem("token");
 
     axios
       .patch(

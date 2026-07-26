@@ -25,7 +25,9 @@ const Navbar = () => {
             <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
                     {/* Logo */}
-                    <div className="text-2xl font-bold text-purple-600">JobBoard</div>
+                    <div className="text-2xl font-bold text-purple-600">
+                        <img src="/images/logo.png" alt="logo" className="w-40"/>
+                    </div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-6 text-gray-700 font-medium">

@@ -25,7 +25,7 @@ export default function Footer() {
     };
 
     return (
-        <div className="bg-gray-100 pt-30">
+        <div className="bg-[#f6f3f4] pt-30">
             {/* CTA Banner */}
             <div className="max-w-6xl mx-auto -mt-50 px-4 relative z-10">
                 <div className=" bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
@@ -44,9 +44,11 @@ export default function Footer() {
 
                 {/* Brand */}
                 <div>
-                    <h3 className="text-2xl font-bold flex items-center gap-2">
+                    {/* <h3 className="text-2xl font-bold flex items-center gap-2">
                         Job<span className="text-gray-800">Board</span>
-                    </h3>
+                    </h3> */}
+
+                    <img src="/images/footer_logo.png" alt="" />
                     <p className="text-gray-500 mt-4 text-sm leading-relaxed">
                         The standard chunk of Lorem Ipsum used since the 1500s is reproduced
                         below for those interested.
@@ -75,7 +77,7 @@ export default function Footer() {
                     <h4 className="font-semibold text-lg mb-4">Useful Links</h4>
                     <ul className="space-y-2 text-gray-600">
                         <li>Find a Job</li>
-                        <li>Compaies</li>
+                        <li>Companies</li>
                         <li>About Us</li>
                         <li>Post a Job</li>
                         <li>Testimonial</li>

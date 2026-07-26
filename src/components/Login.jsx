@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // ✅ FIXED
 import { toast } from "react-toastify";
+import ForgotPassword from "./ForgotPassword";
 
 export default function LoginPage() {
 
@@ -13,6 +14,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -204,7 +207,10 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "Login"}
             </motion.button>
 
-            <a href="#" className="text-blue-600 text-sm hover:underline">
+            <a
+              onClick={() => setShowForgotModal(true)}
+              className="text-blue-600 text-sm hover:underline cursor-pointer"
+            >
               Forgot Password
             </a>
           </div>
@@ -220,6 +226,10 @@ export default function LoginPage() {
 
         </form>
       </motion.div>
+      <ForgotPassword
+        isOpen={showForgotModal}
+        onClose={() => setShowForgotModal(false)}
+      />
     </div>
   );
 }
