@@ -1,80 +1,76 @@
 import React from "react";
-import { FaPaintBrush, FaCode, FaLayerGroup, FaLaptopCode } from "react-icons/fa";
+import {
+  FaPenNib,
+  FaPaintBrush,
+  FaLayerGroup,
+  FaLaptopCode,
+  FaCube,
+  FaCode,
+  FaArrowRight,
+} from "react-icons/fa";
 import { MdAnimation } from "react-icons/md";
-import { HiOutlineLightBulb } from "react-icons/hi";
+
+const categories = [
+  { title: "UI/UX Design", jobs: "100+", icon: FaPenNib, slug: "ui-ux-design" },
+  { title: "Illustration", jobs: "200+", icon: FaPaintBrush, slug: "illustration" },
+  { title: "Cool Art", jobs: "150+", icon: FaLayerGroup, slug: "cool-art" },
+  { title: "Web Design", jobs: "100+", icon: FaLaptopCode, slug: "web-design" },
+  { title: "Product Design", jobs: "110+", icon: FaCube, slug: "product-design" },
+  { title: "Developer", jobs: "250+", icon: FaCode, slug: "developer" },
+  { title: "Animation", jobs: "150+", icon: MdAnimation, slug: "animation" },
+];
+
+const cardBase =
+  "group relative flex h-full flex-col items-center justify-center rounded-2xl p-5 text-center transition duration-300 hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 sm:p-7";
 
 export default function JobCategories() {
-  const categories = [
-    { title: "UI/UX Design", jobs: "100+", icon: FaPaintBrush  },
-    { title: "Illustration", jobs: "200+", icon: HiOutlineLightBulb},
-    { title: "Cool Art", jobs: "150+", icon: FaLayerGroup },
-    { title: "Web Design", jobs: "100+", icon: FaLaptopCode },
-    { title: "Product Design", jobs: "110+", icon: FaPaintBrush },
-    { title: "Developer", jobs: "250+", icon: FaCode },
-    { title: "Animation", jobs: "150+", icon: MdAnimation },
-    { title: "100+ More", jobs: "", icon: null, more: true },
-  ];
-
   return (
-    <section className="p-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4">
-
+    <section className="bg-gradient-to-b from-gray-50 to-white py-1 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <div className="text-center mb-16">
-          <p className="text-purple-600 font-medium">Jobs Category</p>
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mt-2">
-            Choose Your Desire Category
+        <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
+          <p className="font-medium text-purple-600">Jobs category</p>
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+            Choose your desired category
           </h2>
-          <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
+          <p className="mt-4 text-gray-500">
             Discover jobs based on your skills and passion. Explore categories tailored just for you.
           </p>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+          {categories.map(({ title, jobs, icon: Icon, slug }) => (
+            <a
+              key={slug}
+              href={`/jobs?category=${slug}`}
+              className={`${cardBase} border border-gray-200 bg-white shadow-sm hover:border-purple-600 hover:bg-purple-600 hover:shadow-xl hover:shadow-purple-600/20`}
+            >
+              <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-2xl text-purple-600 transition duration-300 group-hover:bg-white/15 group-hover:text-white">
+                <Icon aria-hidden="true" />
+              </span>
 
-          {categories.map((cat, index) => {
-            const Icon = cat.icon;
+              <h3 className="text-base font-semibold text-gray-900 transition group-hover:text-white sm:text-lg">
+                {title}
+              </h3>
 
-            return (
-              <div
-                key={index}
-                className={`group relative p-6 rounded-2xl text-center cursor-pointer transition-all duration-300 
-                ${cat.highlight || cat.more
-                  ? "bg-gradient-to-r from-purple-500 to-purple-700 text-white shadow-lg"
-                  : "bg-white/60 backdrop-blur-md border border-gray-200 hover:bg-gradient-to-r hover:from-purple-500 hover:to-purple-700 hover:text-white shadow-sm hover:shadow-xl"
-                }`}
-              >
-                
-                {/* Glow Effect */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 bg-purple-500/10 blur-xl transition"></div>
+              <p className="mt-1.5 text-sm text-gray-500 transition group-hover:text-purple-100">
+                {jobs} new jobs posted
+              </p>
+            </a>
+          ))}
 
-                {/* Icon */}
-                {Icon && (
-                  <div className={`w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full text-2xl transition-all duration-300
-                    ${cat.highlight
-                      ? "bg-white text-purple-600"
-                      : "bg-purple-100 text-purple-600 group-hover:bg-white group-hover:text-purple-600"
-                    }`}>
-                    <Icon />
-                  </div>
-                )}
-
-                {/* Title */}
-                <h3 className="text-lg font-semibold">
-                  {cat.more ? "100+ More Category" : cat.title}
-                </h3>
-
-                {/* Jobs */}
-                {!cat.more && (
-                  <p className={`mt-2 text-sm 
-                    ${cat.highlight ? "text-purple-100" : "text-gray-500 group-hover:text-purple-100"}`}>
-                    {cat.jobs}+ Posted New Jobs
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          {/* "More" card */}
+          <a
+            href="/jobs"
+            className={`${cardBase} bg-purple-600 text-white shadow-lg shadow-purple-600/25 hover:bg-purple-700`}
+          >
+            <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-xl transition group-hover:translate-x-1">
+              <FaArrowRight aria-hidden="true" />
+            </span>
+            <h3 className="text-base font-semibold sm:text-lg">100+ more categories</h3>
+            <p className="mt-1.5 text-sm text-purple-100">Browse all jobs</p>
+          </a>
         </div>
       </div>
     </section>

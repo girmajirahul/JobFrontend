@@ -1,161 +1,217 @@
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaFacebook, FaArrowUp, FaWhatsapp } from "react-icons/fa";
-export default function Footer() {
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaArrowUp, FaWhatsapp } from "react-icons/fa";
 
-    const [visible, setVisible] = useState(false);
+/* ---------- Data (edit links here) ---------- */
+
+// wa.me needs the country code first (91 for India), digits only
+const WHATSAPP_NUMBER = "919021710342";
+
+const SOCIALS = [
+    { label: "Facebook", href: "#", icon: FaFacebookF },
+    { label: "Twitter", href: "#", icon: FaTwitter },
+    { label: "LinkedIn", href: "#", icon: FaLinkedinIn },
+    { label: "Instagram", href: "#", icon: FaInstagram },
+];
+
+const LINK_COLUMNS = [
+    {
+        title: "Useful links",
+        links: [
+            { label: "Find a job", href: "/jobs" },
+            { label: "Companies", href: "/companies" },
+            { label: "About us", href: "/about" },
+            { label: "Post a job", href: "/employers/post-job" },
+            { label: "Testimonials", href: "/#testimonials" },
+        ],
+    },
+    {
+        title: "Categories",
+        links: [
+            { label: "UI Designer", href: "/jobs?category=ui-designer" },
+            { label: "UX Designer", href: "/jobs?category=ux-designer" },
+            { label: "Graphic Designer", href: "/jobs?category=graphic-designer" },
+            { label: "Web Developer", href: "/jobs?category=web-developer" },
+            { label: "More", href: "/jobs" },
+        ],
+    },
+    {
+        title: "Follow us",
+        links: [
+            { label: "LinkedIn", href: "#" },
+            { label: "Facebook", href: "#" },
+            { label: "Instagram", href: "#" },
+            { label: "Dribbble", href: "#" },
+            { label: "Behance", href: "#" },
+        ],
+    },
+];
+
+/* ---------- Footer ---------- */
+
+export default function Footer() {
+    const [showScrollTop, setShowScrollTop] = useState(false);
+    const [email, setEmail] = useState("");
+    const [subscribed, setSubscribed] = useState(false);
 
     useEffect(() => {
-        const toggleVisibility = () => {
-            if (window.scrollY > 200) {
-                setVisible(true);
-            } else {
-                setVisible(false);
-            }
-        };
-
-        window.addEventListener("scroll", toggleVisibility);
-        return () => window.removeEventListener("scroll", toggleVisibility);
+        const onScroll = () => setShowScrollTop(window.scrollY > 200);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const handleSubscribe = (e) => {
+        e.preventDefault();
+        if (!email.trim()) return;
+        // TODO: send `email` to your newsletter API
+        setSubscribed(true);
+        setEmail("");
     };
 
     return (
-        <div className="bg-[#f6f3f4] pt-30">
-            {/* CTA Banner */}
-            <div className="max-w-6xl mx-auto -mt-50 px-4 relative z-10">
-                <div className=" bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-                    <h2 className="text-2xl md:text-4xl font-semibold text-center md:text-left leading-snug">
-                        Let’s Get Connected And Start <br />
-                        Finding Your Dream Job
-                    </h2>
-                    <button className="bg-purple-400 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-medium  transition cursor-pointer">
-                        Click Here
-                    </button>
-                </div>
-            </div>
+        <footer>
+            {/* ---------- CTA banner (straddles the white / grey boundary) ---------- */}
+            <div className="relative bg-white">
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[#f6f3f4]" aria-hidden="true" />
 
-            {/* Footer */}
-            <div className="max-w-6xl mx-auto px-4 mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
-
-                {/* Brand */}
-                <div>
-                    {/* <h3 className="text-2xl font-bold flex items-center gap-2">
-                        Job<span className="text-gray-800">Board</span>
-                    </h3> */}
-
-                    <img src="/images/footer_logo.png" alt="" />
-                    <p className="text-gray-500 mt-4 text-sm leading-relaxed">
-                        The standard chunk of Lorem Ipsum used since the 1500s is reproduced
-                        below for those interested.
-                    </p>
-
-                    <div className="flex items-center gap-2 mt-6 text-purple-600">
-                        <div className="flex gap-3 mt-6">
-                            <div className="p-2 bg-white shadow-sm rounded-full hover:bg-purple-600 hover:text-white transition cursor-pointer">
-                                <FaFacebookF />
-                            </div>
-                            <div className="p-2 bg-white shadow-sm rounded-full hover:bg-purple-600 hover:text-white transition cursor-pointer">
-                                <FaTwitter />
-                            </div>
-                            <div className="p-2 bg-white shadow-sm rounded-full hover:bg-purple-600 hover:text-white transition cursor-pointer">
-                                <FaLinkedinIn />
-                            </div>
-                            <div className="p-2 bg-white shadow-sm rounded-full hover:bg-purple-600 hover:text-white transition cursor-pointer">
-                                <FaInstagram />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Useful Links */}
-                <div>
-                    <h4 className="font-semibold text-lg mb-4">Useful Links</h4>
-                    <ul className="space-y-2 text-gray-600">
-                        <li>Find a Job</li>
-                        <li>Companies</li>
-                        <li>About Us</li>
-                        <li>Post a Job</li>
-                        <li>Testimonial</li>
-                    </ul>
-                </div>
-
-                {/* Category */}
-                <div>
-                    <h4 className="font-semibold text-lg mb-4">Category</h4>
-                    <ul className="space-y-2 text-gray-600">
-                        <li>UI Designer</li>
-                        <li>UX Designer</li>
-                        <li>Grapic Designer</li>
-                        <li>Web Developers</li>
-                        <li>More</li>
-                    </ul>
-                </div>
-
-                {/* Follow */}
-                <div>
-                    <h4 className="font-semibold text-lg mb-4">Follow Us</h4>
-                    <ul className="space-y-2 text-gray-600">
-                        <li>Linked In</li>
-                        <li>facebook</li>
-                        <li>Instagram</li>
-                        <li>Dribbble</li>
-                        <li>Behance</li>
-                    </ul>
-                </div>
-
-                {/* Newsletter */}
-                <div>
-                    <h4 className="font-semibold text-lg mb-4">Newsletter</h4>
-
-                    <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-                        Sign up to our archi. point to recent updates & office
-                    </p>
-
-                    <div className="flex items-center border-2 border-purple-500 rounded-xl overflow-hidden">
-                        <input
-                            type="email"
-                            placeholder="Enter a Email"
-                            className="flex-1 min-w-0 px-4 py-3 text-sm outline-none"
-                        />
-
-                        <button className="shrink-0 bg-purple-600 text-white px-5 py-3 font-medium  cursor-pointer">
-                            Send
-                        </button>
+                <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+                    <div className="flex flex-col items-center justify-between gap-6 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-700 p-8 text-white shadow-xl shadow-purple-700/20 md:flex-row md:p-12">
+                        <h2 className="text-center text-2xl font-semibold leading-snug md:text-left md:text-4xl">
+                            Let's get connected and start finding your dream job
+                        </h2>
+                        <a
+                            href="/signup"
+                            className="shrink-0 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        >
+                            Get started
+                        </a>
                     </div>
                 </div>
             </div>
 
-            {/* Floating Icons */}
-            <div className="fixed bottom-25 right-6 flex flex-col gap-3">
+            {/* ---------- Main footer ---------- */}
+            <div className="bg-[#f6f3f4]">
+                <div className="mx-auto grid max-w-6xl gap-10 px-4 pb-10 pt-14 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.4fr]">
+                    {/* Brand */}
+                    <div className="md:col-span-2 lg:col-span-1">
+                        <a href="/" aria-label="JobBoard home">
+                            <img src="/images/footer_logo.png" alt="JobBoard" className="h-10 w-auto" />
+                        </a>
+                        <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
+                            A simple place to find work you want, and the people who are hiring for it.
+                        </p>
+
+                        <ul className="mt-6 flex gap-3">
+                            {SOCIALS.map(({ label, href, icon: Icon }) => (
+                                <li key={label}>
+                                    <a
+                                        href={href}
+                                        aria-label={label}
+                                        className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-purple-600 shadow-sm ring-1 ring-gray-200 transition hover:bg-purple-600 hover:text-white hover:ring-purple-600"
+                                    >
+                                        <Icon aria-hidden="true" />
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Link columns */}
+                    {LINK_COLUMNS.map((column) => (
+                        <nav key={column.title} aria-label={column.title}>
+                            <h3 className="mb-4 font-semibold text-gray-900">{column.title}</h3>
+                            <ul className="space-y-2.5 text-sm text-gray-600">
+                                {column.links.map((link) => (
+                                    <li key={link.label}>
+                                        <a href={link.href} className="transition hover:text-purple-700">
+                                            {link.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
+                    ))}
+
+                    {/* Newsletter */}
+                    <div className="md:col-span-2 lg:col-span-1">
+                        <h3 className="mb-4 font-semibold text-gray-900">Newsletter</h3>
+                        <p className="mb-4 text-sm leading-6 text-gray-500">
+                            Get new job alerts and career tips in your inbox.
+                        </p>
+
+                        {subscribed ? (
+                            <p className="rounded-xl bg-white px-4 py-3 text-sm font-medium text-emerald-700 ring-1 ring-emerald-200" role="status">
+                                Thanks, you're subscribed.
+                            </p>
+                        ) : (
+                            <form
+                                onSubmit={handleSubscribe}
+                                className="flex overflow-hidden rounded-xl border border-purple-300 bg-white focus-within:border-purple-600 focus-within:ring-4 focus-within:ring-purple-600/10"
+                            >
+                                <label className="min-w-0 flex-1">
+                                    <span className="sr-only">Email address</span>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Enter your email"
+                                        className="w-full px-4 py-3 text-sm outline-none placeholder:text-gray-400"
+                                    />
+                                </label>
+                                <button
+                                    type="submit"
+                                    className="shrink-0 bg-purple-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-purple-700"
+                                >
+                                    Subscribe
+                                </button>
+                            </form>
+                        )}
+                    </div>
+                </div>
+
+                {/* ---------- Bottom bar ---------- */}
+                <div className="border-t border-gray-200">
+                    <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-6 text-sm text-gray-500 sm:flex-row sm:px-6">
+                        <p>© {new Date().getFullYear()} JobBoard. All rights reserved.</p>
+                        <p className="flex gap-5">
+                            <a href="/privacy" className="transition hover:text-purple-700">
+                                Privacy policy
+                            </a>
+                            <a href="/terms" className="transition hover:text-purple-700">
+                                Terms &amp; conditions
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* ---------- Floating buttons ---------- */}
+            <div className="fixed bottom-6 right-4 z-40 flex flex-col gap-3 sm:right-6">
                 <a
-                    href="https://wa.me/9021710342"
+                    href={`https://wa.me/${WHATSAPP_NUMBER}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Chat on WhatsApp"
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition hover:bg-green-600"
                 >
-                    <button className="bg-green-400 text-white p-3 rounded-full shadow cursor-pointer hover:bg-green-500 transition">
-                        <FaWhatsapp size={20} />
-                    </button>
+                    <FaWhatsapp size={22} aria-hidden="true" />
                 </a>
-            </div>
-            {/* Scroll Top */}
-            <button
-                onClick={scrollToTop}
-                className={`fixed bottom-6 right-6 p-3 rounded-full shadow transition-all duration-300 cursor-pointer
-                    ${visible ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"}
-                    bg-gray-200 hover:bg-gray-300`}
-            >
-                <FaArrowUp size={20} />
-            </button>
 
-            {/* Bottom */}
-            <div className="text-center text-gray-500 text-sm py-6 mt-10 border-t">
-                Privacy and Terms & Conditions
+                <button
+                    type="button"
+                    onClick={scrollToTop}
+                    aria-label="Scroll to top"
+                    tabIndex={showScrollTop ? 0 : -1}
+                    className={`flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-white shadow-lg transition-all duration-300 hover:bg-purple-700 ${
+                        showScrollTop ? "scale-100 opacity-100" : "pointer-events-none scale-75 opacity-0"
+                    }`}
+                >
+                    <FaArrowUp size={18} aria-hidden="true" />
+                </button>
             </div>
-        </div>
+        </footer>
     );
 }

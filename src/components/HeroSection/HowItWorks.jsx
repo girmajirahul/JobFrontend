@@ -29,7 +29,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-1 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         
         {/* Heading */}

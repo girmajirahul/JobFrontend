@@ -1,10 +1,4 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
-import Navbar from './components/Navbar'
-import JobBoard from './components/Navbar'
 import { BrowserRouter, Route, Routes } from "react-router-dom"; // ✅ FIX
 import ProtectedRoute from "./components/ProtectedRoutes";
 import LoginPage from './components/Login'
@@ -26,6 +20,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Jobs from './pages/AdminDashbaord/Jobs'
 import Reports from './pages/AdminDashbaord/Reports'
 import HomePage from './pages/Home/Home'
+import JobPage from './pages/Jobs';
+import ForCandidates from './pages/ForCandidates';
+import ForEmployers from './pages/ForEmployer';
 
 function App() {
 
@@ -35,6 +32,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/jobs" element={<JobPage />} />
+          <Route path="/candidates" element={<ForCandidates />} />
+          <Route path="/employers" element={<ForEmployers />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
